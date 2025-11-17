@@ -74,9 +74,16 @@ function gameFlow()
 
   function playerChoice(row, column)
   {
+    //check if inputs are ok
+    if(column<0 || column>2 || typeof column!=`number` || row<0 || row>2 || typeof row!=`number`)
+    {
+      return console.error(`invalid input mate, enter a digit lower than or equal to 3`);
+    }
+
     column--;
     row--;
 
+    //check if game over
     if (gameOver)
     {
       return console.log(`games over`);
