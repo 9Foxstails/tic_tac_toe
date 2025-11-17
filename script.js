@@ -168,6 +168,11 @@ function gameFlow()
     console.log(`${currentPlayer.getName()} starts!`);
   }
 
+  function displayBoard()
+  {
+    
+  }
+
   return {getBoard,getCurrentPlayer, playerChoice, newGame};
 };
 const game=gameFlow();
