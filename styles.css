@@ -1,0 +1,63 @@
+/*GENERAL*/
+*{
+  margin: 0;
+  padding: 0;
+}
+
+body{
+  font-family: "Snowburst One";
+  display: grid;
+  grid-template-rows: 1fr 8fr 1fr;
+  min-height: 100vh;
+}
+
+/*HEADER*/
+header{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-family: "Snowburst One";
+  font-size: 2rem;
+  white-space: nowrap;
+
+  background-color: aqua;
+}
+/*MAIN*/
+main{
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 4fr 1fr;
+  background-color: antiquewhite;
+}
+main>div{
+  border: 1px black solid;
+}
+.board{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+}
+.board>div{
+  border: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 10rem;
+}
+.newGame{
+  position: absolute;
+  align-self: end;
+  justify-self: center;
+  bottom: 6px;
+  min-width: 100px;
+  min-height: 30px;
+  border-radius: 20px;
+}
+/*FOOTER*/
+footer{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: azure;
+}

@@ -8,6 +8,8 @@
 
 */
 
+
+
 //function that makes a gameboard
 function gameBoard()
 {
@@ -20,7 +22,7 @@ function gameBoard()
     board[i] = [];
     for (let j = 0; j < columns; j++) 
     {
-      board[i].push(0);
+      board[i].push(``);
     }
   }
  
@@ -38,8 +40,8 @@ function makePlayer(name){
 
 const playerOne=makePlayer(`Broski`);
 const playerTwo=makePlayer(`Bruv`);
-playerOne.mark="x";
-playerTwo.mark='o';
+playerOne.mark="X";
+playerTwo.mark='O';
 
 //coin toss who goes first
 function coinToss()
@@ -79,9 +81,6 @@ function gameFlow()
     {
       return console.error(`invalid input mate, enter a digit lower than or equal to 3`);
     }
-
-    column--;
-    row--;
 
     //check if game over
     if (gameOver)
@@ -139,7 +138,7 @@ function gameFlow()
     }
 
     let tmpArr=board.flat();
-    if (!tmpArr.includes(0))
+    if (!tmpArr.includes(``))
     {
       //console.log(!board.includes(0));
       console.log(`its a tie! Start a new game`);
@@ -168,16 +167,52 @@ function gameFlow()
     console.log(`${currentPlayer.getName()} starts!`);
   }
 
-  function displayBoard()
-  {
-    
-  }
-
   return {getBoard,getCurrentPlayer, playerChoice, newGame};
 };
-const game=gameFlow();
-console.log(game.getBoard());
 
+function displayControl()
+{
+  const game=gameFlow();
+  let boardContainer=document.querySelector(`.board`);
+
+  //updates display
+  function updateScreen()
+  {
+    let board=game.getBoard();
+ 
+    //remove old children
+    while(boardContainer.firstChild)
+    {
+      boardContainer.removeChild(boardContainer.firstChild);
+    }
+
+    //add new children
+    for(i=0;i<board.length;i++)
+    {
+      for(j=0;j<board[i].length;j++)
+      {
+      let newDiv=document.createElement(`div`);
+      newDiv.innerHTML=board[i][j];
+      newDiv.dataset.row=i;
+      newDiv.dataset.column=j;
+      boardContainer.appendChild(newDiv);
+      } 
+    }
+  }
+
+  function clickHandlerBoard(e){
+    let row=Number(e.target.dataset.row);
+    let column=Number(e.target.dataset.column);
+    console.log(row, column);
+    game.playerChoice(row, column);
+    updateScreen();
+  }
+  boardContainer.addEventListener(`click`, clickHandlerBoard);
+
+  updateScreen();
+}
+//populate for fun
+displayControl();
 //display function should be able to call it whenever users interacts with the
 /*
 display score
