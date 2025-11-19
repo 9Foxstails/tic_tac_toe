@@ -35,7 +35,8 @@ function makePlayer(name){
   const upScore=()=>score++;
   const getScore=()=>score;
   const getName=()=>name;
-  return {getName, upScore, getScore};
+  const changeName=(newName)=>name=newName;
+  return {getName, upScore, getScore, changeName};
 }
 
 const playerOne=makePlayer(`Broski`);
@@ -72,6 +73,7 @@ function gameFlow()
   }
   
   const getCurrentPlayer=()=>currentPlayer.getName();
+  const changeCurrentPlayerName=(newName)=>currentPlayer.changeName(newName);
   const getBoard=()=>board;
 
   function playerChoice(row, column)
@@ -167,13 +169,17 @@ function gameFlow()
     console.log(`${currentPlayer.getName()} starts!`);
   }
 
-  return {getBoard,getCurrentPlayer, playerChoice, newGame};
+  return {getBoard,getCurrentPlayer, playerChoice, newGame, changeCurrentPlayerName};
 };
+let game=gameFlow();
 
 function displayControl()
 {
   const game=gameFlow();
   let boardContainer=document.querySelector(`.board`);
+  let playerOneContainer=document.querySelector(`.player`);
+  let playerTwoContainer=document.querySelector(`.player_2`);
+  let newGameBtn=document.querySelector(`.newGame`);
 
   //updates display
   function updateScreen()
@@ -200,14 +206,23 @@ function displayControl()
     }
   }
 
+  //handles click on playing board
   function clickHandlerBoard(e){
     let row=Number(e.target.dataset.row);
     let column=Number(e.target.dataset.column);
-    console.log(row, column);
     game.playerChoice(row, column);
     updateScreen();
   }
+
+  function clickHandlerNewGame(){
+    game.newGame();
+    updateScreen();
+    console.log(`click click`);
+  }
+
   boardContainer.addEventListener(`click`, clickHandlerBoard);
+  newGameBtn.addEventListener(`click`, clickHandlerNewGame);
+
 
   updateScreen();
 }
