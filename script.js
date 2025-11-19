@@ -8,8 +8,6 @@
 
 */
 
-
-
 //function that makes a gameboard
 function gameBoard()
 {
@@ -35,7 +33,13 @@ function makePlayer(name){
   const upScore=()=>score++;
   const getScore=()=>score;
   const getName=()=>name;
-  const changeName=(newName)=>name=newName;
+  const changeName=(newName)=>{
+    newName=prompt(`Enter a new name :]`);
+    if(newName.length!=0)
+    {
+      name=newName;
+    }
+  };
   return {getName, upScore, getScore, changeName};
 }
 
@@ -58,7 +62,8 @@ function gameFlow()
 {
   let board=gameBoard();
   let currentPlayer=playerOne;
-  let gameOver=false;
+  let gameOver=undefined;
+  let winner=undefined;
 
   function switchPlayer()
   {
@@ -85,7 +90,7 @@ function gameFlow()
     }
 
     //check if game over
-    if (gameOver)
+    if (gameOver || gameOver==undefined)
     {
       return console.log(`games over`);
     }
@@ -134,7 +139,8 @@ function gameFlow()
     {
       //need to check what was the winning combination
       currentPlayer.upScore();
-      console.log(`${currentPlayer.getName()} won! Score: ${currentPlayer.getScore()}`);
+      winner=true;
+      console.log(`${winner} won! Score: ${currentPlayer.getScore()}`);
       gameOver=true;
       return false;
     }
@@ -144,6 +150,7 @@ function gameFlow()
     {
       //console.log(!board.includes(0));
       console.log(`its a tie! Start a new game`);
+      winner=false;
       gameOver=true;
       return false;
     }
@@ -157,6 +164,7 @@ function gameFlow()
   {
     board=gameBoard();
     gameOver=false;
+    winner=false;
     if(coinToss()==true)
     {
       currentPlayer=playerOne;
@@ -169,7 +177,9 @@ function gameFlow()
     console.log(`${currentPlayer.getName()} starts!`);
   }
 
-  return {getBoard,getCurrentPlayer, playerChoice, newGame, changeCurrentPlayerName};
+  const getGameState=()=>{return {gameOver, winner}};
+
+  return {getBoard,getCurrentPlayer, playerChoice, newGame, changeCurrentPlayerName, getGameState};
 };
 let game=gameFlow();
 
@@ -177,9 +187,12 @@ function displayControl()
 {
   const game=gameFlow();
   let boardContainer=document.querySelector(`.board`);
-  let playerOneContainer=document.querySelector(`.player`);
-  let playerTwoContainer=document.querySelector(`.player_2`);
+  let plrOneContainer=document.querySelector(`.player`);
+  let plrTwoContainer=document.querySelector(`.player_2`);
   let newGameBtn=document.querySelector(`.newGame`);
+  plrOneContainer.firstElementChild.innerHTML=game.getCurrentPlayer();
+  plrTwoContainer.firstElementChild.innerHTML=playerTwo.getName();
+
 
   //updates display
   function updateScreen()
@@ -207,21 +220,54 @@ function displayControl()
   }
 
   //handles click on playing board
-  function clickHandlerBoard(e){
+  function clickHandlerBoard(e)
+  {
     let row=Number(e.target.dataset.row);
     let column=Number(e.target.dataset.column);
     game.playerChoice(row, column);
     updateScreen();
+    let state=game.getGameState();
+    if(state.gameOver)
+    {
+      if(state.winner)
+      {
+        alert(`${game.getCurrentPlayer()} is the winner!`);
+        boardContainer.removeEventListener(`click`, clickHandlerBoard);
+      }
+      else
+      {
+        alert(`its a tie`)
+      }
+    }
   }
 
-  function clickHandlerNewGame(){
+  //handles click to start new game
+  function clickHandlerNewGame()
+  {
     game.newGame();
+    boardContainer.addEventListener(`click`, clickHandlerBoard);
     updateScreen();
-    console.log(`click click`);
+  }
+
+  //handles click to change name
+  function clickHandlerChangeName(e)
+  {
+    if(e.target.dataset.id==`1`)
+    {
+      playerOne.changeName();
+      plrOneContainer.firstElementChild.innerHTML=playerOne.getName();
+    }
+    else if(e.target.dataset.id==`2`)
+    {
+      playerTwo.changeName();
+      plrTwoContainer.firstElementChild.innerHTML=playerTwo.getName();
+    }
   }
 
   boardContainer.addEventListener(`click`, clickHandlerBoard);
   newGameBtn.addEventListener(`click`, clickHandlerNewGame);
+  plrOneContainer.firstElementChild.addEventListener(`click`, clickHandlerChangeName);
+  plrTwoContainer.firstElementChild.addEventListener(`click`, clickHandlerChangeName);
 
 
   updateScreen();

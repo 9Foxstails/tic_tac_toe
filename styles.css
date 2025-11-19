@@ -35,14 +35,21 @@ main{
 }
 
 .player, .player_2{
+  font-size: 2rem;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
   white-space: nowrap;
+
 }
 
 .player{
   color: blue;
   border-right: 2px grey solid;
+}
+.player>:first-child, .player_2>:first-child{
+  cursor: pointer;
 }
 
 .player_2{
@@ -64,6 +71,8 @@ main{
   align-items: center;
   font-size: 10rem;
   aspect-ratio: 1/1;
+
+  cursor: pointer;
 }
 
 .board>div:nth-child(3n+1){
