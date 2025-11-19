@@ -217,16 +217,39 @@ function displayControl()
     }
   }
 
+  function handleTurnDisplay(name){
+    if(name===true)
+    {
+      plrOneContainer.lastElementChild.removeAttribute(`id`);
+      plrTwoContainer.lastElementChild.removeAttribute(`id`);
+    }
+
+    else if(name==playerOne.getName())
+    {
+      plrOneContainer.lastElementChild.removeAttribute(`id`);
+      plrTwoContainer.lastElementChild.id=`turn`;
+    }
+    else
+    {
+      plrTwoContainer.lastElementChild.removeAttribute(`id`);
+      plrOneContainer.lastElementChild.id=`turn`;
+    }
+  }
+
   //handles click on playing board
   function clickHandlerBoard(e)
   {
+
     let row=Number(e.target.dataset.row);
     let column=Number(e.target.dataset.column);
     game.playerChoice(row, column);
+    let tmpPlr=game.getCurrentPlayer();
+    handleTurnDisplay(tmpPlr);
     updateScreen();
     let state=game.getGameState();
     if(state.gameOver)
     {
+      handleTurnDisplay(state.gameOver);
       if(state.winner)
       {
         alert(`${game.getCurrentPlayer()} is the winner!`);
@@ -244,6 +267,7 @@ function displayControl()
   {
     game.newGame();
     boardContainer.addEventListener(`click`, clickHandlerBoard);
+    handleTurnDisplay(game.getCurrentPlayer());
     updateScreen();
   }
 
@@ -262,7 +286,7 @@ function displayControl()
     }
   }
 
-  boardContainer.addEventListener(`click`, clickHandlerBoard);
+  //boardContainer.addEventListener(`click`, clickHandlerBoard);
   newGameBtn.addEventListener(`click`, clickHandlerNewGame);
   plrOneContainer.firstElementChild.addEventListener(`click`, clickHandlerChangeName);
   plrTwoContainer.firstElementChild.addEventListener(`click`, clickHandlerChangeName);
