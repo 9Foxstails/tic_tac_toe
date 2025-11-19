@@ -54,10 +54,8 @@ function coinToss()
   return Math.floor(Math.random()*2); //produces 0 or 1;
 }
 
-//console.log(gameBoard());
-//player
-//if 3 in a row is win
 
+//game logic
 function gameFlow()
 {
   let board=gameBoard();
