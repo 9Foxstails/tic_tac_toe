@@ -254,7 +254,7 @@ function displayControl()
       closeBtn.addEventListener(`click`, (e)=>{
         e.preventDefault();
         dialog.close();
-      })
+      });
       handleTurnDisplay(state.gameOver);
       if(state.winner)
       {
@@ -263,13 +263,11 @@ function displayControl()
         let id=game.getCurrentPlayerId();
         let scoreDiv=document.querySelector(`[data-id="${id}"]`).nextElementSibling;
         scoreDiv.innerHTML=`${game.getCurrentPlayerScore()}`;
-        alert(`${game.getCurrentPlayer()} is the winner!`);
       }
       else
       {
         dialog.firstElementChild.innerHTML=`It's a tie!`;
         dialog.showModal();
-        alert(`its a tie`);
       }
 
       boardContainer.removeEventListener(`click`, clickHandlerBoard);
