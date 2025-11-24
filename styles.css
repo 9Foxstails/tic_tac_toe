@@ -29,7 +29,7 @@ header{
 main{
   position: relative;
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   background-color: antiquewhite;
   padding: 1rem;
 }
@@ -37,6 +37,7 @@ main{
 .player, .player_2{
   font-size: 2rem;
   display: grid;
+  grid-template-rows: 0fr 0fr 1fr;
   justify-items: center;
   white-space: nowrap;
 
@@ -47,7 +48,11 @@ main{
   border-right: 2px grey solid;
 }
 .player>:first-child, .player_2>:first-child{
+  align-self: start;
   cursor: pointer;
+}
+.player>.score{
+  align-self: start;
 }
 
 .player_2{

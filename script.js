@@ -28,11 +28,12 @@ function gameBoard()
 }
 
 //make player function
-function makePlayer(name){
+function makePlayer(name, id){
   let score=0;
   const upScore=()=>score++;
   const getScore=()=>score;
   const getName=()=>name;
+  const getId=()=>id;
   const changeName=(newName)=>{
     newName=prompt(`Enter a new name :]`);
     if(newName.length!=0)
@@ -40,11 +41,11 @@ function makePlayer(name){
       name=newName;
     }
   };
-  return {getName, upScore, getScore, changeName};
+  return {getName, upScore, getScore, changeName, getId};
 }
 
-const playerOne=makePlayer(`Broski`);
-const playerTwo=makePlayer(`Bruv`);
+const playerOne=makePlayer(`Broski`, 1);
+const playerTwo=makePlayer(`Bruv`, 2);
 playerOne.mark="X";
 playerTwo.mark='O';
 
@@ -76,6 +77,8 @@ function gameFlow()
   }
   
   const getCurrentPlayer=()=>currentPlayer.getName();
+  const getCurrentPlayerScore=()=>currentPlayer.getScore();
+  const getCurrentPlayerId=()=>currentPlayer.getId();
   const changeCurrentPlayerName=(newName)=>currentPlayer.changeName(newName);
   const getBoard=()=>board;
 
@@ -104,14 +107,14 @@ function gameFlow()
       if(board[row][column]==0)
       {
         board[row][column]=currentPlayer.mark;
-        console.log(board);
         boardState();
+        if(gameOver!=true)
+        {
         switchPlayer();
-        console.log(`${currentPlayer.getName()} turn`);
+        }
       }
       else
       {
-        console.log(board);
         board[row][column]=board[row][column];
         console.log(`cant do that mate!`);
       }
@@ -138,9 +141,8 @@ function gameFlow()
       //need to check what was the winning combination
       currentPlayer.upScore();
       winner=true;
-      console.log(`${winner} won! Score: ${currentPlayer.getScore()}`);
+      console.log(`${currentPlayer.getName()} won! Score: ${currentPlayer.getScore()}`);
       gameOver=true;
-      return false;
     }
 
     let tmpArr=board.flat();
@@ -151,10 +153,6 @@ function gameFlow()
       winner=false;
       gameOver=true;
       return false;
-    }
-    else
-    {
-      return true;
     }
   }
   
@@ -175,9 +173,9 @@ function gameFlow()
     console.log(`${currentPlayer.getName()} starts!`);
   }
 
-  const getGameState=()=>{return {gameOver, winner}};
+  const getGameState=()=>{return {gameOver, winner, getCurrentPlayerScore}};
 
-  return {getBoard,getCurrentPlayer, playerChoice, newGame, changeCurrentPlayerName, getGameState};
+  return {getBoard,getCurrentPlayer, playerChoice, newGame, changeCurrentPlayerName, getGameState, getCurrentPlayerScore, getCurrentPlayerId};
 };
 let game=gameFlow();
 
@@ -226,13 +224,13 @@ function displayControl()
 
     else if(name==playerOne.getName())
     {
-      plrOneContainer.lastElementChild.removeAttribute(`id`);
-      plrTwoContainer.lastElementChild.id=`turn`;
+      plrTwoContainer.lastElementChild.removeAttribute(`id`);
+      plrOneContainer.lastElementChild.id=`turn`;
     }
     else
     {
-      plrTwoContainer.lastElementChild.removeAttribute(`id`);
-      plrOneContainer.lastElementChild.id=`turn`;
+      plrOneContainer.lastElementChild.removeAttribute(`id`);
+      plrTwoContainer.lastElementChild.id=`turn`;
     }
   }
 
@@ -242,23 +240,32 @@ function displayControl()
 
     let row=Number(e.target.dataset.row);
     let column=Number(e.target.dataset.column);
-    game.playerChoice(row, column);
+    console.log(game.getCurrentPlayer());
     let tmpPlr=game.getCurrentPlayer();
+    game.playerChoice(row, column);
     handleTurnDisplay(tmpPlr);
     updateScreen();
+    
     let state=game.getGameState();
     if(state.gameOver)
     {
       handleTurnDisplay(state.gameOver);
       if(state.winner)
       {
+        let id=game.getCurrentPlayerId();
+        console.log(game.getCurrentPlayer());
+        console.log(game.getCurrentPlayerScore());
+        let scoreDiv=document.querySelector(`[data-id="${id}"]`).nextElementSibling;
+        scoreDiv.innerHTML=`${game.getCurrentPlayerScore()}`;
+        console.log(scoreDiv);
         alert(`${game.getCurrentPlayer()} is the winner!`);
-        boardContainer.removeEventListener(`click`, clickHandlerBoard);
       }
       else
       {
         alert(`its a tie`)
       }
+
+      boardContainer.removeEventListener(`click`, clickHandlerBoard);
     }
   }
 
@@ -294,13 +301,9 @@ function displayControl()
 
   updateScreen();
 }
-//populate for fun
+
+//initiate game
 displayControl();
-//display function should be able to call it whenever users interacts with the
-/*
-display score
-display game state
-display names
-*/
+
 
 
