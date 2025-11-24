@@ -156,6 +156,7 @@ function gameFlow()
     }
   }
   
+  //reset the board
   function newGame()
   {
     board=gameBoard();
@@ -177,7 +178,6 @@ function gameFlow()
 
   return {getBoard,getCurrentPlayer, playerChoice, newGame, changeCurrentPlayerName, getGameState, getCurrentPlayerScore, getCurrentPlayerId};
 };
-let game=gameFlow();
 
 function displayControl()
 {
@@ -249,20 +249,27 @@ function displayControl()
     let state=game.getGameState();
     if(state.gameOver)
     {
+      let dialog=document.querySelector(`dialog`);
+      let closeBtn=document.querySelector(`.closeBtn`);
+      closeBtn.addEventListener(`click`, (e)=>{
+        e.preventDefault();
+        dialog.close();
+      })
       handleTurnDisplay(state.gameOver);
       if(state.winner)
       {
+        dialog.firstElementChild.innerHTML=`${game.getCurrentPlayer()} won!`;
+        dialog.showModal();
         let id=game.getCurrentPlayerId();
-        console.log(game.getCurrentPlayer());
-        console.log(game.getCurrentPlayerScore());
         let scoreDiv=document.querySelector(`[data-id="${id}"]`).nextElementSibling;
         scoreDiv.innerHTML=`${game.getCurrentPlayerScore()}`;
-        console.log(scoreDiv);
         alert(`${game.getCurrentPlayer()} is the winner!`);
       }
       else
       {
-        alert(`its a tie`)
+        dialog.firstElementChild.innerHTML=`It's a tie!`;
+        dialog.showModal();
+        alert(`its a tie`);
       }
 
       boardContainer.removeEventListener(`click`, clickHandlerBoard);
